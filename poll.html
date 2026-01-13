@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Poll App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .poll-question {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option label {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .option label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option .radio-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .option input[type="radio"]:checked + label .radio-custom {
+            border-color: white;
+            background: white;
+        }
+
+        .option input[type="radio"]:checked + label .radio-custom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #667eea;
+        }
+
+        .vote-button {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .vote-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .vote-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+        }
+
+        .result-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .result-bar {
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .reset-button {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-button:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .total-votes {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Poll App</h1>
+        <div class="poll-question">What's your favorite programming language?</div>
+        
+        <form id="pollForm">
+            <div class="options">
+                <div class="option">
+                    <input type="radio" name="vote" id="option1" value="JavaScript">
+                    <label for="option1">
+                        <span class="radio-custom"></span>
+                        JavaScript
+                    </label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="vote" id="option2" value="Python">
+                    <label for="option2">
+                        <span class="radio-custom"></span>
+                        Python
+                    </label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="vote" id="option3" value="Java">
+                    <label for="option3">
+                        <span class="radio-custom"></span>
+                        Java
+                    </label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="vote" id="option4" value="C++">
+                    <label for="option4">
+                        <span class="radio-custom"></span>
+                        C++
+                    </label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="vote" id="option5" value="Go">
+                    <label for="option5">
+                        <span class="radio-custom"></span>
+                        Go
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="vote-button" id="voteButton">Cast Your Vote</button>
+        </form>
+
+        <div class="results" id="results">
+            <h2>Poll Results</h2>
+            <div id="resultsContainer"></div>
+            <div class="total-votes" id="totalVotes"></div>
+            <button class="reset-button" id="resetButton">Vote Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize poll data
+        let pollData = {
+            'JavaScript': 0,
+            'Python': 0,
+            'Java': 0,
+            'C++': 0,
+            'Go': 0
+        };
+
+        // Load saved data from localStorage
+        const savedData = localStorage.getItem('pollData');
+        if (savedData) {
+            pollData = JSON.parse(savedData);
+        }
+
+        const pollForm = document.getElementById('pollForm');
+        const results = document.getElementById('results');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const totalVotesElement = document.getElementById('totalVotes');
+        const resetButton = document.getElementById('resetButton');
+
+        // Handle form submission
+        pollForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedOption = document.querySelector('input[name="vote"]:checked');
+            
+            if (!selectedOption) {
+                alert('Please select an option before voting!');
+                return;
+            }
+
+            // Increment vote count
+            pollData[selectedOption.value]++;
+            
+            // Save to localStorage
+            localStorage.setItem('pollData', JSON.stringify(pollData));
+            
+            // Show results
+            showResults();
+        });
+
+        // Reset button handler
+        resetButton.addEventListener('click', function() {
+            // Clear selection
+            const radioButtons = document.querySelectorAll('input[name="vote"]');
+            radioButtons.forEach(radio => radio.checked = false);
+            
+            // Hide results and show form
+            results.classList.remove('show');
+            pollForm.style.display = 'block';
+        });
+
+        // Function to display results
+        function showResults() {
+            // Hide form
+            pollForm.style.display = 'none';
+            
+            // Calculate total votes
+            const totalVotes = Object.values(pollData).reduce((sum, votes) => sum + votes, 0);
+            
+            // Generate results HTML
+            let resultsHTML = '';
+            for (const [option, votes] of Object.entries(pollData)) {
+                const percentage = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
+                resultsHTML += `
+                    <div class="result-item">
+                        <div class="result-label">
+                            <span>${option}</span>
+                            <span>${votes} votes</span>
+                        </div>
+                        <div class="result-bar">
+                            <div class="result-fill" style="width: ${percentage}%">
+                                ${percentage > 0 ? percentage + '%' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            resultsContainer.innerHTML = resultsHTML;
+            totalVotesElement.textContent = `Total votes: ${totalVotes}`;
+            
+            // Show results
+            results.classList.add('show');
+        }
+
+
+    </script>
+</body>
+</html>
