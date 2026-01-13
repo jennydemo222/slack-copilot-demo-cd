@@ -341,7 +341,7 @@
                         </div>
                         <div class="result-bar">
                             <div class="result-fill" style="width: ${percentage}%">
-                                ${percentage > 10 ? percentage + '%' : ''}
+                                ${percentage > 0 ? percentage + '%' : ''}
                             </div>
                         </div>
                     </div>
@@ -355,11 +355,7 @@
             results.classList.add('show');
         }
 
-        // If there are existing votes, show a message
-        const totalExistingVotes = Object.values(pollData).reduce((sum, votes) => sum + votes, 0);
-        if (totalExistingVotes > 0) {
-            console.log(`There are ${totalExistingVotes} existing votes in the poll.`);
-        }
+
     </script>
 </body>
 </html>
