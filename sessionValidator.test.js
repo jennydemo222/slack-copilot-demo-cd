@@ -20,9 +20,10 @@ console.log('✓ Passed');
 
 // Test 2: Expired session should return false
 console.log('\nTest 2: Expired session (past expiry)');
+const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000); // 1 day ago
 const expiredSession = {
   userId: "123",
-  expiresAt: "2023-10-01T10:00:00Z"
+  expiresAt: pastDate.toISOString()
 };
 assert(isSessionValid(expiredSession) === false, 'Expired session should return false');
 console.log('✓ Passed');

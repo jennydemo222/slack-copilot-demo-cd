@@ -58,3 +58,4 @@ The tests verify:
 - ✅ Expired sessions (past expiry) return `false`
 - ✅ Null sessions return `false`
 - ✅ Undefined sessions return `false`
+- ✅ Edge case: Session expiring at current time
