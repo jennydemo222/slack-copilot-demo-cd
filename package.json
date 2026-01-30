@@ -1,0 +1,15 @@
+{
+  "name": "slack-copilot-demo-cd",
+  "version": "1.0.0",
+  "description": "Authentication demo with security fixes",
+  "main": "auth.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3"
+  }
+}
