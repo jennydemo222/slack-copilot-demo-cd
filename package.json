@@ -1,0 +1,25 @@
+{
+  "name": "slack-copilot-demo-cd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jennydemo222/slack-copilot-demo-cd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jennydemo222/slack-copilot-demo-cd/issues"
+  },
+  "homepage": "https://github.com/jennydemo222/slack-copilot-demo-cd#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "jest": "^30.3.0"
+  }
+}
